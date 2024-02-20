@@ -28,8 +28,11 @@ namespace Lab1
             //TestBFS();
             //TestBFSTimDuong();
             //TestLienThong();
-            MienLienThong();
-            Console.ReadKey();
+            //MienLienThong();
+            //LietKeMienLienThong();
+            //TestCanhCau();
+            //TestDFS();
+            TestTimDuong();
             }
 
 
@@ -99,7 +102,7 @@ namespace Lab1
             int m;
             List<int>[] adjList;
             ReadBFS(filePath, out n, out m, out adjList);
-            BFS(adjList, n, m);
+            //BFS(adjList, n, m);
         }
 
         static void TestBFSTimDuong()
@@ -131,6 +134,50 @@ namespace Lab1
             Console.WriteLine(MienLienThong(adjList, n));
         }
 
+
+        static void LietKeMienLienThong()
+        {
+            string filePath = @"D:\22DH110310__ThaiGiaBao\txt\LietKeLienThong.txt";
+            int n;
+            List<int>[] adjList;
+            ReadAdjMatrixList(filePath, out n, out adjList);
+            LietKeLienThong(adjList, n);
+        }
+
+        static void TestCanhCau()
+        {
+            string filePath = @"D:\22DH110310__ThaiGiaBao\txt\CanhCau.txt";
+            int n;
+            int m;
+            int x;
+            List<int>[] adjList;
+            ReadAdjMatrixListForBrideEgde(filePath, out n, out m, out x, out adjList);
+            Console.WriteLine(CanhCau(adjList, n, m, x));
+        }
+
+        static void TestDFS()
+        {
+            string filePath = @"D:\22DH110310__ThaiGiaBao\txt\DFS.txt";
+            List<int>[] adjList;
+            int n, m;
+            ReadAdjDFS(filePath, out n, out m, out adjList);
+            Initialize(n + 1);
+            DFS(m, adjList);
+
+        }
+
+        static void TestTimDuong()
+        {
+            string filePath = @"D:\22DH110310__ThaiGiaBao\txt\TimDuongDFS.txt";
+            List<int>[] adjList;
+            int n, m, x;
+            ReadAdjDFSTimDuong(filePath, out n, out m, out x, out adjList);
+            Initialize(n + 1);
+            DFS(m, adjList);
+            Trace(m, x);
+        }
+
+
         static void ReadAdjMatrix(string filePath, out int n, out int[,] adjMatrix)
         {
             StreamReader sr = new StreamReader(filePath);
@@ -152,13 +199,54 @@ namespace Lab1
             StreamReader sr = new StreamReader(filePath);
             n = Convert.ToInt32(sr.ReadLine());
             adjList = new List<int>[n+1];
+            for (int i = 0; i < adjList.Length; i++)
+            {
+                adjList[i] = new List<int>();
+            }
             for (int u = 1; u <= n; u++)
             {
                 string line = sr.ReadLine();
                 string[] nums = line.Split();
-                adjList[u] = Array.ConvertAll(nums, s => int.Parse(s)).ToList();
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    if (line == String.Empty)
+                    {
+                        continue;
+                    }
+                    adjList[u].Add(int.Parse(nums[i]));
+                }
             }
         }
+
+
+        static void ReadAdjMatrixListForBrideEgde(string filePath, out int n, out int m, out int x, out List<int>[] adjList)
+        {
+            StreamReader sr = new StreamReader(filePath);
+            string line = sr.ReadLine();
+            string[] values = line.Split();
+            n = Convert.ToInt32(values[0]);
+            m = Convert.ToInt32(values[1]);
+            x = Convert.ToInt32(values[2]);
+            adjList = new List<int>[n + 1];
+            for (int i = 0; i < adjList.Length; i++)
+            {
+                adjList[i] = new List<int>();
+            }
+            for (int u = 1; u <= n; u++)
+            {
+                line = sr.ReadLine();
+                string[] nums = line.Split();
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    if (line == String.Empty)
+                    {
+                        continue;
+                    }
+                    adjList[u].Add(int.Parse(nums[i]));
+                }
+            }
+        }
+
 
         static void ReadAdjMatrixTuple(string filePath, out int n, out List<Tuple<int, int>> adjTuple)
         {
@@ -171,6 +259,55 @@ namespace Lab1
                 string[] nums = line.Split();
                 adjTuple.Add(new Tuple<int, int>(int.Parse(nums[0]), int.Parse(nums[1])));
             }
+        }
+
+        static void ReadAdjDFS(string filePath, out int n, out int m, out List<int>[] adjList)
+        {
+            StreamReader sr = new StreamReader(filePath);
+            string line = sr.ReadLine();
+            string[] values = line.Split();
+            n = int.Parse(values[0]);
+            m = int.Parse(values[1]);
+            adjList = new List<int>[n + 1];
+            for (int u = 1; u <= n; u++)
+            {
+                line = sr.ReadLine();
+                values = line.Split();
+                adjList[u] = new List<int>();
+                if (line != String.Empty)
+                {
+                    for (int v = 0; v < values.Length; v++)
+                    {
+                        adjList[u].Add(int.Parse(values[v]));
+                    }
+                }
+            }
+            sr.Close();
+        }
+
+        static void ReadAdjDFSTimDuong(string filePath, out int n, out int m, out int x, out List<int>[] adjList)
+        {
+            StreamReader sr = new StreamReader(filePath);
+            string line = sr.ReadLine();
+            string[] values = line.Split();
+            n = int.Parse(values[0]);
+            m = int.Parse(values[1]);
+            x = int.Parse(values[2]);
+            adjList = new List<int>[n + 1];
+            for (int u = 1; u <= n; u++)
+            {
+                line = sr.ReadLine();
+                values = line.Split();
+                adjList[u] = new List<int>();
+                if (line != String.Empty)
+                {
+                    for (int v = 0; v < values.Length; v++)
+                    {
+                        adjList[u].Add(int.Parse(values[v]));
+                    }
+                }
+            }
+            sr.Close();
         }
 
         static void ReadEdgeList(string path, out int n, out int m, out List<Tuple<int, int>> edgeList)
@@ -331,10 +468,8 @@ namespace Lab1
             }
         }
 
-        static void BFS(List<int>[] adjList, int n, int s)
+        static void BFS(List<int>[] adjList, int n, int s, ref Queue<int> queue, ref bool[] visited)
         {
-            bool[] visited = new bool[n+1];
-            Queue<int> queue = new Queue<int>();
             queue.Enqueue(s);
             visited[s] = true;
 
@@ -342,13 +477,14 @@ namespace Lab1
             {
                 //Lay u tu hang doi
                 int u = queue.Dequeue();
+                //Console.Write(u +" ");
                 //Xet u ke V
                 foreach(var v in adjList[u])
                 {
                     if (visited[v] == false)
                     {
                         visited[v] = true;
-                        Console.Write(v+" ");
+                        //Console.Write(v+" ");
                         queue.Enqueue(v);
                     }
                 }
@@ -414,22 +550,13 @@ namespace Lab1
                 //Xet u ke V
                 foreach (var v in adjList[u])
                 {
-                    if (visited[v] == false)
+                    for (int i = 1; i < n; i++)
                     {
-                        visited[v] = true;
-                        queue.Enqueue(v);
+                        if (visited[v] == false)
+                        {
+                            BFS(adjList, n, i, ref queue, ref visited);
+                        }
                     }
-                }
-            }
-            for (int i = 0; i < visited.Length; i++)
-            {
-                if (visited[i] == false)
-                {
-                    result = false;
-                }
-                else
-                {
-                    result = true;
                 }
             }
             return result;
@@ -441,7 +568,6 @@ namespace Lab1
             int count = 0;
             Queue<int> queue = new Queue<int>();
             queue.Enqueue(1);
-            visited[1] = true;
 
             while (queue.Count != 0)
             {
@@ -450,22 +576,141 @@ namespace Lab1
                 //Xet u ke V
                 foreach (var v in adjList[u])
                 {
-                    if (visited[v] == false)
+                    for (int i = 1; i < visited.Length; i++)
                     {
-                        visited[v] = true;
-                        queue.Enqueue(v);
+                        if (visited[i] == false)
+                        {
+                            BFS(adjList, n, i, ref queue, ref visited);
+                            count++;
+                        }
                     }
-                }
-            }
-            for (int i = 0; i < visited.Length; i++)
-            {
-                if (visited[i] == false)
-                {
-                    count++;
                 }
             }
             return count;
         }
+
+        static void LietKeLienThong(List<int>[] adjList, int n)
+        {
+            bool[] visited = new bool[n + 1];
+            Queue<int> queue = new Queue<int>();
+            queue.Enqueue(1);
+
+            while (queue.Count != 0)
+            {
+                //Lay u tu hang doi
+                int u = queue.Dequeue();
+                //Xet u ke V
+                foreach (var v in adjList[u])
+                {
+                    for (int i = 1; i < visited.Length; i++)
+                    {
+                        if (visited[i] == false)
+                        {
+                            BFS(adjList, n, i, ref queue, ref visited);
+                            Console.WriteLine();
+                        }
+                    }
+                }
+            }
+        }
+
+        static bool CanhCau(List<int>[] adjList, int n, int x, int y)
+        {
+            bool[] visited = new bool[n + 1];
+            Queue<int> queue = new Queue<int>();
+            queue.Enqueue(1);
+            int count = 0;
+            int count1 = 0;
+            while (queue.Count != 0)
+            {
+                //Lay u tu hang doi
+                int u = queue.Dequeue();
+                //Xet u ke V
+                foreach (var v in adjList[u])
+                {
+                    for (int i = 1; i < visited.Length; i++)
+                    {
+                        if (visited[i] == false)
+                        {
+                            BFS(adjList, n, i, ref queue, ref visited);
+                            count++;
+                        }
+                    }
+                }
+            }
+
+            bool[] visited1 = new bool[n + 1];
+            Queue<int> queue1 = new Queue<int>();
+            queue1.Enqueue(1);
+            while (queue1.Count != 0)
+            {
+                //Lay u tu hang doi
+                int u = queue1.Dequeue();
+                //Xet u ke V
+                foreach (var v in adjList[u])
+                {
+
+                    for (int i = 1; i < visited1.Length; i++)
+                    {
+                        if (i == x || i == y)
+                        {
+                            continue;
+                        }
+                        if (visited1[i] == false)
+                        {
+                            BFS(adjList, n, i, ref queue1, ref visited1);
+                            count1++;
+                        }
+                    }
+                }
+            }
+            return (count < count1);
+        }
+
+        static bool[] visited;
+        static void Initialize(int n)
+        {
+            visited = new bool[n + 1];
+            for (int i = 0; i < visited.Length; i++)
+            {
+                visited[i] = false;
+            }
+            pre = new int[n + 1];
+            for (int i = 0; i < visited.Length; i++)
+            {
+                pre[i] = -1;
+            }
+        }
+
+        static void DFS(int s, List<int>[] adjList)
+        {
+            visited[s] = true;
+            //Console.Write(s + " ");
+            foreach (int v in adjList[s])
+            {
+                if (visited[v]) continue;
+                pre[v] = s;
+                DFS(v, adjList);
+            }
+        }
+
+        static int[] pre;
+        static void Trace(int s, int t)
+        {
+            int u = t;
+            List<int> path = new List<int>();
+            while (u != -1)
+            {
+                path.Add(u);
+                u = pre[u];
+            }
+            path.Reverse();
+            foreach (int v in path)
+            {
+                Console.Write(v + " ");
+            }
+        }
+
 
         static void OutPut(int[,] adjMatrix)
         {
